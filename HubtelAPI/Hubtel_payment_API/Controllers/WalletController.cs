@@ -190,7 +190,7 @@ namespace Hubtel_payment_API.Controllers
             }
             if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.AccountScheme.ToLower().Equals("airteltigo")  )
             {
-                if((details.AccountNumber.Contains("027") || details.AccountNumber.Contains("056") || details.AccountNumber.Contains("026") || details.AccountNumber.Contains("057")))
+                if(!(details.AccountNumber.Contains("027") || details.AccountNumber.Contains("056") || details.AccountNumber.Contains("026") || details.AccountNumber.Contains("057")))
                 {
                     throw new Exception($"Account number is not a valid AirtelTigo Number");
 
@@ -200,7 +200,7 @@ namespace Hubtel_payment_API.Controllers
             }
             if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.AccountScheme.ToLower().Equals("vodafone") )
             {
-                if((details.AccountNumber.Contains("020") || !details.AccountNumber.Contains("050")))
+                if(!(details.AccountNumber.Contains("020") || !details.AccountNumber.Contains("050")))
                 {
                     throw new Exception($"Account number is not a valid Vodafone Number");
 
