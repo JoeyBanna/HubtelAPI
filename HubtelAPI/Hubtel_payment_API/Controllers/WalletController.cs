@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -116,26 +117,49 @@ namespace Hubtel_payment_API.Controllers
                 throw new Exception($"Account scheme {details.AccountScheme} does not exist");
             }
 
-            //To only get first 6 digits of a Master Card or Visa Card number
             
 
-            if(details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.WalletAccountNumber.Length > 10 || details.WalletAccountNumber.Length < 10)
+            if(details.AccountNumber != null )
             {
-                throw new Exception($"Momo Account Number {details.WalletAccountNumber} can not be more or less than 10 characters");
+                if(details.Type.ToLower().Equals("momo"))
+                {
+                    if (details.WalletAccountNumber.Length > 10 || details.WalletAccountNumber.Length < 10)
+                    {
+                        throw new Exception($"Momo Account Number {details.WalletAccountNumber} can not be more or less than 10 characters");
+
+
+                    }
+
+                }
+                else 
+                {
+
+                    if ( details.Type.ToUpper().Equals("CARD"))
+
+                    {
+                        if (details.WalletAccountNumber.Length > 16 || details.WalletAccountNumber.Length < 16)
+                        {
+                            throw new Exception($"Card  Number {details.WalletAccountNumber} can not be more or less than 16 characters");
+
+
+
+                        }
+
+                    }
+                }
 
 
 
             }
-            if (details.AccountNumber != null && details.Type.ToLower().Equals("visa") && details.WalletAccountNumber.Length > 16  || details.WalletAccountNumber.Length < 16)
+            else
             {
-                throw new Exception($"Card  Number {details.WalletAccountNumber} can not be more than 16 characters");
+                throw new Exception("Account number cannot be null");
 
             }
-            if (details.AccountNumber != null && details.Type.ToLower().Equals("mastercard") && details.WalletAccountNumber.Length > 16)
-            {
-                throw new Exception($"Card  Number {details.WalletAccountNumber} can not be more than 16 characters");
 
-            }
+
+
+
 
             if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.AccountScheme.ToLower().Equals("mtn") )
             {
@@ -189,12 +213,30 @@ namespace Hubtel_payment_API.Controllers
                 throw new Exception($"Account number is not a valid Visa Card Number");
 
             }
+            //To only check if the master card starts 5 and is a valid number
             if (details.AccountNumber != null && details.Type.ToLower().Equals("card") && details.AccountScheme.ToLower().Equals("mastercard") && !details.AccountNumber.StartsWith("5"))
             {
 
                 throw new Exception($"Account number is not a valid MasterCard Number");
 
             }
+
+            if (details.AccountNumber != null )
+            {
+                long numericValue;
+                bool isNum = Int64.TryParse(details.AccountNumber, out numericValue);
+                if (isNum == false)
+                {
+                    throw new Exception($"Account number is not a valid  Number");
+
+                }
+
+
+
+
+            }
+
+            //To only get first 6 digits of a Master Card or Visa Card number
 
 
             string strValue = string.Empty;
