@@ -119,40 +119,68 @@ namespace Hubtel_payment_API.Controllers
             //To only get first 6 digits of a Master Card or Visa Card number
             
 
-            if(details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.WalletAccountNumber.Length > 9)
+            if(details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.WalletAccountNumber.Length > 10 || details.WalletAccountNumber.Length < 10)
             {
-                throw new Exception($"Momo Account Number {details.WalletAccountNumber} can not be more than 10 characters");
+                throw new Exception($"Momo Account Number {details.WalletAccountNumber} can not be more or less than 10 characters");
 
 
 
             }
-            if (details.AccountNumber != null && details.Type.ToLower().Equals("visa") && details.WalletAccountNumber.Length > 15)
+            if (details.AccountNumber != null && details.Type.ToLower().Equals("visa") && details.WalletAccountNumber.Length > 16  || details.WalletAccountNumber.Length < 16)
             {
                 throw new Exception($"Card  Number {details.WalletAccountNumber} can not be more than 16 characters");
 
             }
-            if (details.AccountNumber != null && details.Type.ToLower().Equals("visa") && details.WalletAccountNumber.Length > 15)
+            if (details.AccountNumber != null && details.Type.ToLower().Equals("mastercard") && details.WalletAccountNumber.Length > 16)
             {
                 throw new Exception($"Card  Number {details.WalletAccountNumber} can not be more than 16 characters");
 
             }
 
-            if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.AccountScheme.ToLower().Equals("mtn") && !details.AccountNumber.StartsWith("055") || !details.AccountNumber.StartsWith("024") || !details.AccountNumber.StartsWith("059"))
+            if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.AccountScheme.ToLower().Equals("mtn") )
             {
-                
-                throw new Exception($"Account number is not a valid MTN Number");
+                if(!(details.AccountNumber.Contains("055") || details.AccountNumber.Contains("024") || details.AccountNumber.Contains("059")))
+                {
+                    throw new Exception($"Account number is not a valid MTN Number");
+
+                }
 
             }
-            if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.AccountScheme.ToLower().Equals("airteltigo") && !details.AccountNumber.StartsWith("027") || !details.AccountNumber.StartsWith("056") || !details.AccountNumber.StartsWith("026") || !details.AccountNumber.StartsWith("057") )
+            if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") )
             {
+                if (!(details.AccountScheme.ToLower().Equals("airteltigo") || details.AccountScheme.ToLower().Equals("mtn") || details.AccountScheme.ToLower().Equals("vodafone")))
+                {
+                    throw new Exception("Account scheme does not correspond with account type ");
 
-                throw new Exception($"Account number is not a valid AirtelTigo Number");
+                }
 
             }
-            if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.AccountScheme.ToLower().Equals("vodafone") && !details.AccountNumber.StartsWith("020") || !details.AccountNumber.StartsWith("050"))
+            if (details.AccountNumber != null && details.Type.ToLower().Equals("card"))
             {
+                if (!(details.AccountScheme.ToLower().Equals("visa") || details.AccountScheme.ToLower().Equals("mastercard")))
+                {
+                    throw new Exception("Account scheme does not correspond with account type ");
 
-                throw new Exception($"Account number is not a valid Vodafone Number");
+                }
+
+            }
+            if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.AccountScheme.ToLower().Equals("airteltigo")  )
+            {
+                if((details.AccountNumber.Contains("027") || details.AccountNumber.Contains("056") || details.AccountNumber.Contains("026") || details.AccountNumber.Contains("057")))
+                {
+                    throw new Exception($"Account number is not a valid AirtelTigo Number");
+
+                }
+
+
+            }
+            if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.AccountScheme.ToLower().Equals("vodafone") )
+            {
+                if((details.AccountNumber.Contains("020") || !details.AccountNumber.Contains("050")))
+                {
+                    throw new Exception($"Account number is not a valid Vodafone Number");
+
+                }
 
             }
             if (details.AccountNumber != null && details.Type.ToLower().Equals("card") && details.AccountScheme.ToLower().Equals("visa") && !details.AccountNumber.StartsWith("4"))
