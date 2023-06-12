@@ -65,7 +65,7 @@ namespace Hubtel_payment_API.Controllers
      
             await _walletRepository.DeleteWalletAsync(id);
 
-            return NoContent();
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
         [HttpPost("CreateWallet")]
@@ -81,7 +81,7 @@ namespace Hubtel_payment_API.Controllers
 
             details.WalletAccountNumber = details.AccountNumber;
 
-            //To prevent duplicate wallet number in the system so it will return 409 conflict status
+            //To prevent duplicate wallet number in the system i will return 409 conflict status
             //code which the account number is already in the system 
             if (await _walletRepository.CheckIfWalletAccountExistsAsync(details.AccountNumber))
             {
@@ -118,6 +118,7 @@ namespace Hubtel_payment_API.Controllers
             }
 
             
+            //Validations to check the length of the account number 
 
             if(details.AccountNumber != null )
             {
@@ -163,7 +164,9 @@ namespace Hubtel_payment_API.Controllers
 
             if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.AccountScheme.ToLower().Equals("mtn") )
             {
-                if(!(details.AccountNumber.Contains("055") || details.AccountNumber.Contains("024") || details.AccountNumber.Contains("059")))
+                var firstThreeDigs = details.AccountNumber.Substring(0, 3);
+            
+                if (!(firstThreeDigs.Equals("055") || firstThreeDigs.Equals("024") || firstThreeDigs.Equals("059")))
                 {
                     throw new Exception($"Account number is not a valid MTN Number");
 
@@ -190,7 +193,9 @@ namespace Hubtel_payment_API.Controllers
             }
             if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.AccountScheme.ToLower().Equals("airteltigo")  )
             {
-                if(!(details.AccountNumber.Contains("027") || details.AccountNumber.Contains("056") || details.AccountNumber.Contains("026") || details.AccountNumber.Contains("057")))
+                var firstThreeDigs = details.AccountNumber.Substring(0, 3);
+
+                if (!(firstThreeDigs.Equals("027") || firstThreeDigs.Equals("056") || firstThreeDigs.Equals("026") || firstThreeDigs.Equals("057")))
                 {
                     throw new Exception($"Account number is not a valid AirtelTigo Number");
 
@@ -200,7 +205,9 @@ namespace Hubtel_payment_API.Controllers
             }
             if (details.AccountNumber != null && details.Type.ToLower().Equals("momo") && details.AccountScheme.ToLower().Equals("vodafone") )
             {
-                if(!(details.AccountNumber.Contains("020") || !details.AccountNumber.Contains("050")))
+                var firstThreeDigs = details.AccountNumber.Substring(0, 3);
+
+                if (!(firstThreeDigs.Equals("020") || firstThreeDigs.Equals("050")))
                 {
                     throw new Exception($"Account number is not a valid Vodafone Number");
 
