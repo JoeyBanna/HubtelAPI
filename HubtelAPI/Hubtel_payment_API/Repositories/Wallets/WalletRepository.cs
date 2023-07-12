@@ -42,9 +42,16 @@ namespace Hubtel_payment_API.Repositories.Wallets
         public async Task<Entities.Wallets> GetSingleWalletAsync(Guid Id)
             => await _context.Wallets.Where(w => w.WalletId == Id).SingleOrDefaultAsync();
 
-        public async Task<IEnumerable<Entities.Wallets>> GetWalletCountAsync(string AccountNumber)
+        public async Task<IEnumerable<Entities.Wallets>> GetWalletByUserIdAsync(Guid userId)
         {
-            var obj = await _context.Wallets.Where(w => w.WalletAccountNumber == AccountNumber).ToListAsync();
+          var obj =  await _context.Wallets.Where(item => item.UserId == userId).ToListAsync();
+            return obj;
+
+        }
+
+        public async Task<IEnumerable<Entities.Wallets>> GetWalletCountAsync(Guid id)
+        {
+            var obj = await _context.Wallets.Where(w => w.UserId == id).ToListAsync();
 
             return obj;
         }

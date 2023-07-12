@@ -9,3 +9,4 @@ namespace Hubtel_payment_API.Repositories.Users
         Task<IEnumerable<Entities.Users>> GetAllUsersAsync();
     }
 }
+            

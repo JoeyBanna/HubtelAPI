@@ -1,5 +1,7 @@
 using AutoMapper;
+using Confluent.Kafka;
 using Hubtel_payment_API.Data;
+using Hubtel_payment_API.KafkaConfig;
 using Hubtel_payment_API.Repositories.Roles;
 using Hubtel_payment_API.Repositories.Users;
 using Hubtel_payment_API.Repositories.Wallets;
@@ -29,6 +31,14 @@ namespace Hubtel_payment_API
             services.AddControllers();
             //Mapper mapper = MappingConfig.RegisterMaps().CreateMapper();
             //services.AddSingleton(mapper);
+           //services.Configure<ProducerConfig>(builConfiguration.GetSection("Kafka"));
+           
+            //Kafka config
+           
+
+
+
+
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -43,14 +53,16 @@ namespace Hubtel_payment_API
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Wallet UI",
-                    Description = "A simple example to Wallet UI",
+                    Title = "Hubtel Wallet UI",
+                    Description = "A Wallet API For Hubtel Payment UI",
                 });
             });
 
             services.AddScoped<IRoleRepository, RoleRepository>().AddScoped<IUserRepository, UserRepository>();
                 services.AddScoped<IWalletRepository, WalletRepository>();
-        }
+          //  services.AddSingleton<IKafkaConfiguration,KafkaConfigurations>();
+           
+        } 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
