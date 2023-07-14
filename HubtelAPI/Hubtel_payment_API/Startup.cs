@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using System;
 
 namespace Hubtel_payment_API
@@ -28,6 +29,8 @@ namespace Hubtel_payment_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IConnectionMultiplexer>(opt => ConnectionMultiplexer.Connect(Configuration.GetConnectionString("RedisConnection"))); 
+
             services.AddControllers();
             //Mapper mapper = MappingConfig.RegisterMaps().CreateMapper();
             //services.AddSingleton(mapper);

@@ -6,7 +6,7 @@ namespace Hubtel_payment_API.Entities
     public class Wallets
     {
         [Key]
-        public Guid WalletId { get; set; } = Guid.NewGuid();
+        public Guid WalletId { get; set; } = Guid.NewGuid(); 
         [Required]
         public string Name { get; set; }
         [Required]
