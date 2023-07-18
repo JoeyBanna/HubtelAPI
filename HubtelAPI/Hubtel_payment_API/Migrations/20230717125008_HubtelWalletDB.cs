@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Hubtel_payment_API.Migrations
 {
-    public partial class AddHubtelWalletTable : Migration
+    public partial class HubtelWalletDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -37,12 +37,12 @@ namespace Hubtel_payment_API.Migrations
                 name: "Wallets",
                 columns: table => new
                 {
-                    WalletId = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Type = table.Column<string>(nullable: true),
-                    AccountNumber = table.Column<string>(nullable: true),
-                    AccountScheme = table.Column<string>(nullable: true),
-                    OwnerPhoneNumber = table.Column<string>(nullable: true),
+                    WalletId = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Type = table.Column<string>(nullable: false),
+                    AccountNumber = table.Column<string>(nullable: false),
+                    AccountScheme = table.Column<string>(nullable: false),
+                    OwnerPhoneNumber = table.Column<string>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
                     WalletAccountNumber = table.Column<string>(nullable: true)

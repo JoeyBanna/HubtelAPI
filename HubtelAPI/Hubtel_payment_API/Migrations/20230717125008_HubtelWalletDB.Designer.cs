@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hubtel_payment_API.Migrations
 {
     [DbContext(typeof(WalletDbContext))]
-    [Migration("20230609184451_AddHubtelWalletTable")]
-    partial class AddHubtelWalletTable
+    [Migration("20230717125008_HubtelWalletDB")]
+    partial class HubtelWalletDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -58,26 +58,30 @@ namespace Hubtel_payment_API.Migrations
 
             modelBuilder.Entity("Hubtel_payment_API.Entities.Wallets", b =>
                 {
-                    b.Property<Guid>("WalletId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("WalletId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AccountNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AccountScheme")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OwnerPhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")

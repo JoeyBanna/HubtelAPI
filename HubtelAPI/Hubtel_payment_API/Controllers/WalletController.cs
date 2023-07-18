@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.IIS.Core;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 using System;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Hubtel_payment_API.Controllers
@@ -18,16 +20,17 @@ namespace Hubtel_payment_API.Controllers
     public class WalletController : ControllerBase
     {
         private readonly IWalletRepository _walletRepository;
-      //  private readonly IKafkaConfiguration _kafkaConfiguration;
-       // private readonly ProducerConfig _config;
+        //  private readonly IKafkaConfiguration _kafkaConfiguration;
+        // private readonly ProducerConfig _config;
+        private readonly IConnectionMultiplexer _multiplexer;
 
-       
 
-        public WalletController(IWalletRepository walletRepository)
+        public WalletController(IWalletRepository walletRepository, IConnectionMultiplexer multiplexer)
         {
             _walletRepository = walletRepository;
-           // _kafkaConfiguration = kafkaConfiguration;
-          //  _config = config;
+            _multiplexer = multiplexer;
+            // _kafkaConfiguration = kafkaConfiguration;
+            //  _config = config;
 
         }
 
@@ -53,11 +56,15 @@ namespace Hubtel_payment_API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAllWallets()
         {
+            
+
             var obj = await _walletRepository.GetAllWalletsAsync();
             if (obj == null)
             {
                 return NotFound();
             }
+           
+
             return Ok(obj);
         }
 
@@ -65,19 +72,34 @@ namespace Hubtel_payment_API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetWalletById(Guid id)
+        public async Task<IActionResult> GetWalletById(string id)
         {
-            if (id == Guid.Empty || id == Guid.Parse("00000000-0000-0000-0000-000000000000"))
+
+            if (id == null)
             {
                 return BadRequest();
             }
+            var ID = id.ToString();
+            var checkRedis = await _walletRepository.checkRedisForData(ID);
+            if (checkRedis != null)
+            {
+               return Ok(checkRedis);
+            }
 
             var obj = await _walletRepository.GetSingleWalletAsync(id);
+           if (obj != null)
+            {
+                var redisDb = _multiplexer.GetDatabase();
+                var serialWallet = JsonConvert.SerializeObject(obj);
+                redisDb.StringSet(ID, serialWallet);
+            }
+
 
             if (obj == null)
             {
                 return NotFound();
             }
+           
 
             return Ok(obj);
         }
@@ -292,7 +314,7 @@ namespace Hubtel_payment_API.Controllers
                     details.AccountNumber = details.AccountNumber;
                 }
 
-                details.WalletId = Guid.NewGuid();
+                details.WalletId = $"hubtelPayment:{Guid.NewGuid()}";
 
                 //Save to the Wallet table
                 await _walletRepository.AddWalletAsync(details);

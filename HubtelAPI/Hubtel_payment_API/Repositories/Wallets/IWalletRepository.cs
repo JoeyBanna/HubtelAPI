@@ -9,9 +9,10 @@ namespace Hubtel_payment_API.Repositories.Wallets
         Task<IEnumerable<Entities.Wallets>> GetWalletCountAsync(Guid id);
         Task<bool> CheckIfWalletAccountExistsAsync(string AccountNumber);
         Task<IEnumerable<Entities.Wallets>> GetAllWalletsAsync();
-        Task<Entities.Wallets> GetSingleWalletAsync(Guid Id);
+        Task<Entities.Wallets> GetSingleWalletAsync(string Id);
         Task <IEnumerable<Entities.Wallets>> GetWalletByUserIdAsync(Guid userId);
         Task DeleteWalletAsync(Guid Id);
         Task AddWalletAsync(Entities.Wallets entities);
+        Task<Entities.Wallets> checkRedisForData(string WalletId);
     }
 }
