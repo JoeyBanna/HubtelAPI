@@ -42,8 +42,8 @@ namespace Hubtel_payment_API.Controllers
             {
                 return BadRequest();
             }
-            var OBJ = await _walletRepository.GetWalletByUserIdAsync(id);
-            return Ok(OBJ);
+            var obj = await _walletRepository.GetWalletByUserIdAsync(id);
+            return Ok(obj);
         }
 
 
@@ -320,6 +320,8 @@ namespace Hubtel_payment_API.Controllers
                 await _walletRepository.AddWalletAsync(details);
 
                 string serializedWallet = JsonConvert.SerializeObject(details);
+                
+                //KAFKA CONFIG
                 var config = new ProducerConfig { BootstrapServers = "localhost:9092" };
                 using var producera = new ProducerBuilder<Null, string>(config).Build();
 
